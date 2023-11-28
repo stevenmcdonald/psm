@@ -1,0 +1,74 @@
+#
+# * Install MongoDB 7.0 from the official repo
+#
+# * Create an admin user with full privs and a psm user that can read and write
+# just the psm database
+#
+# * Enable access control for MongoDB
+#
+# This should only need to be run once, and will harmlessly fail with
+# permission errors if run again
+#
+# based on: https://www.mongodb.com/docs/manual/tutorial/install-mongodb-on-debian/
+
+- name: Install Mongodb 7.0 for PSM
+  hosts: mongodb_servers
+  become: no
+  remote_user: root
+
+  tasks:
+    - name: Install requirements
+      ansible.builtin.apt:
+        pkg:
+        - gnupg
+        - curl
+        - python3-pymongo # needed for ansible
+
+    - name: Check Mongo apt key
+      stat:
+        path: "/etc/apt/sources.list.d/mongodb-org-7.0.list"
+      register: apt_key
+
+    - name: Fetch Mongo apt key and add apt source
+      ansible.builtin.shell: |
+        curl -fsSL https://pgp.mongodb.com/server-7.0.asc | gpg -o /usr/share/keyrings/mongodb-server-7.0.gpg --dearmor
+        echo "deb [ signed-by=/usr/share/keyrings/mongodb-server-7.0.gpg ] http://repo.mongodb.org/apt/debian bullseye/mongodb-org/7.0 main" > /etc/apt/sources.list.d/mongodb-org-7.0.list
+      when: not apt_key.stat.exists
+
+    - name: Update apt caches and install MongoDB
+      ansible.builtin.apt:
+        name: mongodb-org
+        state: present
+        update_cache: true
+
+    - name: Start mongod
+      ansible.builtin.systemd:
+        name: mongod
+        state: started
+
+    - name: Create Mongo admin user
+      community.mongodb.mongodb_user:
+        database: admin
+        name: "{{ MONGODB_ADMIN_USER }}"
+        password: "{{ MONGODB_ADMIN_PASSWORD }}"
+        roles: userAdminAnyDatabase,readWriteAnyDatabase
+        state: present
+
+    - name: Create Mongo PSM user
+      community.mongodb.mongodb_user:
+        database: "{{ MONGODB_DATABASE }}"
+        name: "{{ MONGODB_USER }}"
+        password: "{{ MONGODB_PASSWORD }}"
+        roles: readWrite
+        state: present
+
+    - name: Enable access control for MongoDB
+      ansible.builtin.copy:
+        src: mongod.conf
+        dest: /etc/mongod.conf
+
+    - name: Restart mongod with access control
+      ansible.builtin.systemd:
+        name: mongod
+        state: restarted
+

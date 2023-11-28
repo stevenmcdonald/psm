@@ -1,0 +1,30 @@
+# Basic server setup
+#
+# * upgrade all packages
+# * enable unattended updates
+
+---
+- name: Update Apt
+  hosts: all
+  become: no
+  remote_user: root
+
+  tasks:
+    - name: Update apt caches, install upgrades, and clean old downloads and unused deps
+      ansible.builtin.apt:
+        update_cache: yes
+        upgrade: safe
+        autoclean: yes
+        autoremove: yes
+
+    # https://wiki.debian.org/UnattendedUpgrades
+    - name: Install unattended-upgrades
+      ansible.builtin.apt:
+        pkg: 
+          - unattended-upgrades
+          - apt-listchanges
+
+    - name: Enable unattended-upgrades
+      ansible.builtin.shell: |
+        echo unattended-upgrades unattended-upgrades/enable_auto_updates boolean true | debconf-set-selections
+        dpkg-reconfigure -f noninteractive unattended-upgrades

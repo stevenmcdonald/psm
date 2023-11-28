@@ -1,0 +1,6 @@
+{
+    "require": {
+        "gravitypdf/querypath": "^3.2",
+        "mongodb/mongodb": "^1.16"
+    }
+}
