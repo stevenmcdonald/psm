@@ -3,8 +3,8 @@
 - name: Install PHP and Apache for PSM
   hosts: php_servers
   vars:
-    install_dir: /usr/local/greatfire
-    psm_repo_url: https://github.com/stevenmcdonald/psm/
+    install_dir: /usr/local/greatfire/psm
+    psm_repo_url: https://github.com/stevenmcdonald/psm
   become: no
   remote_user: root
 
@@ -17,6 +17,8 @@
           - php
           - php-curl
           - php-mongodb
+          - php-mbstring
+          - php-xml
           - sudo
           - vim-nox
 
@@ -62,13 +64,39 @@
       ansible.builtin.file:
         path: "{{ install_dir }}"
         state: directory
+        owner: psm
+        group: psm
 
     - name: Pull the code
       ansible.builtin.git:
         repo: "{{ psm_repo_url }}"
-        desg: "{{ install_dir }}"
+        dest: "{{ install_dir }}"
         version: main
         force: yes
+      become: yes
+      become_user: psm
+
+    - name: Install local.inc
+      ansible.builtin.template:
+        src: local.inc.j2
+        dest: "{{ install_dir }}/inc/local.inc"
+      become: yes
+      become_user: psm
+
+    - name: Copy Composer installer
+      ansible.builtin.copy:
+        src: composer-setup.php
+        dest: /root/composer-setup.php
+
+    - name: Install Composer
+      ansible.builtin.shell:
+        cmd: php composer-setup.php --install-dir=/usr/local/bin --filename=composer
+        chdir: /root
+
+    - name: Install PHP depenecies
+      community.general.composer:
+        command: install
+        working_dir: "{{ install_dir }}/inc"
       become: yes
       become_user: psm
 
