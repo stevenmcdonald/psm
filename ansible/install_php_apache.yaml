@@ -14,6 +14,7 @@
         pkg:
           - apache2
           - libapache2-mod-php
+          - git
           - php
           - php-curl
           - php-mongodb
