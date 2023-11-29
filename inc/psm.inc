@@ -26,9 +26,18 @@ function get_play_store_url($territory, $name, $id) {
     return PLAY_STORE_URL . '?' . http_build_query(array(
         'id' => $name,
         'gl' => strtolower($territory)));
-    // return 'https://itunes.apple.com/' . strtolower($territory) . '/app/' . urlencode($name) . '/id' . $id;
 }
 
+function get_app($id) {
+    global $mongodb_manager;
+    $mongodb_query = new MongoDB\Driver\Query([
+        '_id' => $id
+    ]);
+    $rows = $mongodb_manager->executeQuery('psm.apps', $mongodb_query)->toArray();
+    if ($rows) {
+        return $rows[0];
+    }
+}
 
 function play_store_proxy_request($request) {
     $url = PLAY_STORE_URL;
@@ -46,14 +55,28 @@ function play_store_proxy_request($request) {
         curl_setopt($ch, CURLOPT_HTTPHEADER, [
             'Accept-Language: en-US,en'
         ]);
+
         $html = curl_exec($ch);
+        $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
+        $result = array();
 
-        return $html;
+        switch($code) {
+            case 200:
+                $result['html'] = $html;
+                break;
+            case 404:
+                $result['not_found'] = true;
+                break;
+            default:
+                $result['error_code'] = $code;
+        }
+
+        return $result;
     }
 
-    trigger_error('itunes_api_proxy_request failed');
+    trigger_error('play_store_proxy_request failed');
 }
 
 
@@ -202,13 +225,27 @@ function test_app($app_id, $territory) {
     $request['id'] = $app_id;
     $request['gl'] = $territory;
 
-    $html = play_store_proxy_request($request);
+    $result = play_store_proxy_request($request);
 
-    // a quick check without really parsing the HTML
-    $available = str_contains($html, 'aria-label="Install"');
+    if (isset($result['error_code'])) {
+        # server error or some other problem.
+        # Ambiguous results, don't save
+        $response = new stdClass();
+        $response->server_error = true;
+        return $response;
+    }
 
-    $response = parse_html_response($html);
-    $response->available = $available;
+    if (isset($result['not_found'])) {
+        $response = new stdClass();
+        $response->not_found = true;
+        $response->available = false;
+    } else {
+        // a quick check without really parsing the HTML
+        $available = str_contains($result['html'], 'aria-label="Install"');
+
+        $response = parse_html_response($result['html']);
+        $response->available = $available;
+    }
 
     save_request_response($request, $response, 'server');
 
@@ -233,7 +270,7 @@ function save_request_response($request, $response, $source) {
     $insertOneResult = $collection->insertOne($data);
     $main_id = $insertOneResult->getInsertedId();
 
-    // XXX insert in to statuses collection
+    // insert in to statuses collection
     $collection = (new MongoDB\Client(MONGODB_CONNECTION))->psm->statuses;
 
     $data2 = new stdClass();
@@ -244,6 +281,23 @@ function save_request_response($request, $response, $source) {
     $data2->ts = $data->ts;
 
     $collection->insertOne($data2);
+
+    if (!get_app($request['id'])) {
+        $collection = (new MongoDB\Client(MONGODB_CONNECTION))->psm->apps;
+        // create a placeholder entry in the apps collection
+        $app = new stdClass();
+        $app->_id = $request['id'];
+        $app->name = $response->name;
+        $app->first_unavailable_ts = null;
+        $app->last_available_ts = 0;
+        $app->last_unavailable_ts = 0;
+        $app->unavailable_somewhere = 0;
+        $app->icon = $response->icon;
+        $app->territories = 1;
+
+        $collection->insertOne($app);
+    }
+
 }
 
 
