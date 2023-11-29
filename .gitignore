@@ -1,5 +1,5 @@
 inc/local.inc
 inc/vendor
-ansible/secrets.enc
+ansible/secrets.env
 ansible/production.ini
 ansible/venv
