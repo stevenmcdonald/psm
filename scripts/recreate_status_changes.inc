@@ -26,7 +26,6 @@ function getAllStatusesGrouped() {
 
 function getChanges() {
     $apps = getAllStatusesGrouped();
-    // print_r($apps);
     $changes = [];
     foreach($apps as $id => $app) {
         foreach($app['t'] as $territory => $statuses) {
@@ -67,7 +66,6 @@ function getChanges() {
 }
 
 function isChangeSignificant($change) {
-    print_r($change);
 
     if(!isset($change->duration)) {
         return false;
