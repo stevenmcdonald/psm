@@ -109,7 +109,7 @@
       become: yes
       become_user: psm
 
-    - name: Create log dir
+    - name: Create mongo script log dir
       ansible.builtin.file:
         path: "{{ install_dir }}/scripts/log"
         state: directory
@@ -117,11 +117,27 @@
       become_user: psm
 
     # run hourly at 21 minutes after the hour
-    - name: Enable cron script
+    - name: Enable mongo cron script
       ansible.builtin.cron:
         name: mongo-full
         job: "{{ install_dir }}/scripts/mongo-full.sh > /dev/null"
         minute: 21
+        user: psm
+
+    - name: Create recreate_status_changes.sh
+      ansible.builtin.template:
+        src: recreate_status_changes.sh.j2
+        dest: "{{ install_dir }}/scripts/recreate_status_changes.sh"
+        mode: '0755'
+        become: yes
+        become_user: psm
+
+    # run hourly at 42 minutes after the hour
+    - name: Enable recreate_status_changes cron
+      ansible.builtin.cron:
+        name: recreate_status_changes
+        job: "{{ install_dir }}"/scripts/recreate_status_changes.sh > /dev/null
+        minute: 42
         user: psm
 
     - name: Reload Apache
