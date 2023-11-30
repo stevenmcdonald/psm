@@ -6,3 +6,6 @@ ansible/venv
 # these files contain passwords
 scripts/recreate_status_changes.sh
 scripts/mongo-full.sh
+# mongo script log dir
+scripts/log/
+
