@@ -6,9 +6,9 @@ ini_set('memory_limit', '8192M');
 require 'recreate_status_changes.inc';
 
 $changes = getChanges();
-print_r($changes);
+//print_r($changes);
 $significant_changes = array_filter($changes, 'isChangeSignificant');
-print_r($significant_changes);
+//print_r($significant_changes);
 
 echo count($changes), ' changes', PHP_EOL;
 echo count($significant_changes), ' significant changes', PHP_EOL;
