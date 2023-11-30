@@ -2,19 +2,13 @@
 
 db.agg_statuses.ensureIndex({'_id.id': 1});
 
-recreate(db.main, [
+recreate(db.statuses, [
     {
         $group: {
             _id: {
                 id: '$id',
                 territory: '$territory'
             },
-            // XXX
-            // $available is a boolean, ASM does this though
-            // I don't really understand what $first and $last means for
-            // booleans
-            //
-            // this looks like it should be a date
             last_available: {
                 $last: '$available'
             },
