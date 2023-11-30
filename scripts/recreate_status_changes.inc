@@ -12,7 +12,6 @@ function getAllStatusesGrouped() {
         $apps = [];
 
         foreach($rows as $row) {
-            print_r($row->available);
             if(!isset($apps[$row->id])) {
                 $apps[$row->id] = ['t' => []];
             }
