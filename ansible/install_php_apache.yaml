@@ -129,14 +129,14 @@
         src: recreate_status_changes.sh.j2
         dest: "{{ install_dir }}/scripts/recreate_status_changes.sh"
         mode: '0755'
-        become: yes
-        become_user: psm
+      become: yes
+      become_user: psm
 
     # run hourly at 42 minutes after the hour
     - name: Enable recreate_status_changes cron
       ansible.builtin.cron:
         name: recreate_status_changes
-        job: "{{ install_dir }}"/scripts/recreate_status_changes.sh > /dev/null
+        job: "{{ install_dir }}/scripts/recreate_status_changes.sh > /dev/null"
         minute: 42
         user: psm
 
