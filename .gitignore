@@ -3,3 +3,6 @@ inc/vendor
 ansible/secrets.env
 ansible/production.ini
 ansible/venv
+# these files contain passwords
+scripts/recreate_status_changes.sh
+scripts/mongo-full.sh
