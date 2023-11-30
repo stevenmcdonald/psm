@@ -22,7 +22,7 @@ if (!array_key_exists('gl', $_POST)) {
 }
 
 $id = $_POST['id'];
-$gl = $_POST['gl'];
+$gl = strtolower($_POST['gl']);
 
 if (!territory_is_valid($gl)) {
     client_error('Invalid or unsupported country code');

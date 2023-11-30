@@ -101,6 +101,13 @@
       become: yes
       become_user: psm
 
+    - name: Install mongo-full cron script
+      ansible.builtin.template:
+        src: mongo-full.sh.j2
+        dest: "{{ install_dir }}/scripts/mongo-full.sh"
+      become: yes
+      become_user: psm
+
     - name: Reload Apache
       ansible.builtin.systemd:
         name: apache2

@@ -1,0 +1,16 @@
+#!/bin/bash
+
+log1="log/"$(date +%s)
+log2="$log1.ops"
+set -e
+echo "starting"
+date
+(time cat ../mongodb-scripts/*full* | mongosh mongodb://{{ MONGODB_USER }}:{{ MONGODB_PASSWORD }}@localhost/psm && echo ok) 2>&1 >$log1 &
+while [ $(jobs -r | wc -l) != 0 ]; do
+    echo "db.currentOp()" | mongosh 2>&1 >>$log2
+    sleep 1
+done
+
+echo "All done"
+date
+

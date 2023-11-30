@@ -27,6 +27,7 @@ function getAllStatusesGrouped() {
 
 function getChanges() {
     $apps = getAllStatusesGrouped();
+    // print_r($apps);
     $changes = [];
     foreach($apps as $id => $app) {
         foreach($app['t'] as $territory => $statuses) {
@@ -50,8 +51,8 @@ function getChanges() {
                         $change->ts = $ts;
                         $change->confirmations = 1;
 
-                        //$change->app = new stdClass;
-                        //$change->app->id = $app['_id'];
+                        $change->app = new stdClass;
+                        $change->app->id = $app['_id'];
                         //$change->app->ranking = $app['ranking'];
                     }
                 }
@@ -67,6 +68,8 @@ function getChanges() {
 }
 
 function isChangeSignificant($change) {
+    print_r($change);
+
     if(!isset($change->duration)) {
         return false;
     }
