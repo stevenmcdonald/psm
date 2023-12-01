@@ -29,6 +29,7 @@ recreate(db.agg_statuses, [
         $project: {
             _id: '$_id',
             territories: '$territories',
+            available: '$available',
             first_unavailable_ts: '$first_unavailable_ts',
             last_available_ts: '$last_available_ts',
             last_unavailable_ts: '$last_unavailable_ts',
