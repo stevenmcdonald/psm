@@ -2,6 +2,8 @@
 
 const PLAY_STORE_URL='https://play.google.com/store/apps/details';
 const PLAY_SEARCH_URL='https://play.google.com/store/search';
+const PLAY_APPS_URL='https://play.google.com/store/apps';
+
 
 require 'local.inc';
 
@@ -139,7 +141,10 @@ function parse_html_response($html) {
     $star_ele = $qp->find('div[aria-label*="Rated "]');
     // this value comes out as something like "4.2star", strip the "star"
     // and convert to a float
-    $response->star_rating = (float)str_replace('star', '', $star_ele->get(0)->textContent);
+    $star_temp = $star_ele->get(0);
+    if ($star_temp) {
+        $response->star_rating = (float)str_replace('star', '', $star_temp->textContent);
+    }
 
     // content rating
     $rating_ele = $qp->find('span[itemprop="contentRating"]');
