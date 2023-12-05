@@ -149,7 +149,6 @@
         minute: 32
         user: psm
 
-
     - name: Reload Apache
       ansible.builtin.systemd:
         name: apache2
