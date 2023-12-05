@@ -6,23 +6,13 @@ const PLAY_APPS_URL='https://play.google.com/store/apps';
 
 
 require 'local.inc';
+require 'util.inc';
 
 // composer autoload
 require "vendor/autoload.php";
 
 $mongodb_manager = new MongoDB\Driver\Manager(MONGODB_CONNECTION);
 
-function fatal($message)
-{
-    header('HTTP/1.1 500 Internal Server Error: ' . $message);
-    exit();
-}
-
-function h404() {
-    echo 'Page not found';
-    http_response_code(404);
-    exit;
-}
 
 function get_play_store_url($territory, $name, $id) {
     return PLAY_STORE_URL . '?' . http_build_query(array(
