@@ -140,6 +140,16 @@
         minute: 42
         user: psm
 
+    # run the auto_requests script daily at 00:32
+    - name: Add auto_requests to cron
+      ansible.builtin.cron:
+        name: auto_requests
+        job: "{{ install_dir }}/scripts/auto_requests.sh"
+        hour: 0
+        minute: 32
+        user: psm
+
+
     - name: Reload Apache
       ansible.builtin.systemd:
         name: apache2
