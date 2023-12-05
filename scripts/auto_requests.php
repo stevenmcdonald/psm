@@ -1,6 +1,7 @@
 <?php
 
 require '../inc/psm.inc';
+require 'recreate_status_changes.inc';
 
 function get_apps_page_ids($territory) {
     $request = array(
@@ -76,7 +77,13 @@ function get_test_territories() {
 
 $ids = [];
 
-foreach(get_apps_page_ids('us') as $id) {
+$us_ids = get_apps_page_ids('us');
+$cn_ids = get_apps_page_ids('cn');
+$fr_ids = get_apps_page_ids('fr');
+
+$home_page_ids = array_unique(array_merge($us_ids, $cn_ids, $fr_ids));
+
+foreach($home_page_ids as $id) {
     $ids[$id] = [];
 }
 
@@ -97,8 +104,26 @@ foreach($rows as $row) {
     $ids[$row->id][] = $row->territory;
 }
 
+
+// Apps that have "insigificant" changes indicate a potential change,
+// we want to test these again
+$changes = getChanges();
+$insignificant_changes = array_filter($changes, function($change) {
+    return !isChangeSignificant($change);
+});
+shuffle($insignificant_changes);
+$insignificant_changes = array_slice($insignificant_changes, 0, 60);
+foreach($insignificant_changes as $change) {
+    if(!isset($ids[$change->id])) {
+        $ids[$change->id] = [];
+    }
+    $ids[$change->id][] = $change->territory;
+}
+
+// shuffle everything
+shuffle_assoc($ids);
+
 // print_r($ids);
-// print_r($test_territories);
 
 $start = time();
 foreach($ids as $id => $territory_ids) {
