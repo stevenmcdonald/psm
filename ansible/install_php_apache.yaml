@@ -120,7 +120,7 @@
     - name: Enable mongo cron script
       ansible.builtin.cron:
         name: mongo-full
-        job: "{{ install_dir }}/scripts/mongo-full.sh > /dev/null"
+        job: "cd {{ install_dir }}/scripts/; {{ install_dir }}/scripts/mongo-full.sh > /dev/null"
         minute: 21
         user: psm
 
@@ -136,7 +136,7 @@
     - name: Enable recreate_status_changes cron
       ansible.builtin.cron:
         name: recreate_status_changes
-        job: "{{ install_dir }}/scripts/recreate_status_changes.sh > /dev/null"
+        job: "cd {{ install_dir }}/scripts/; {{ install_dir }}/scripts/recreate_status_changes.sh > /dev/null"
         minute: 42
         user: psm
 
@@ -144,7 +144,7 @@
     - name: Add auto_requests to cron
       ansible.builtin.cron:
         name: auto_requests
-        job: "{{ install_dir }}/scripts/auto_requests.sh"
+        job: "cd {{ install_dir }}/scripts/; {{ install_dir }}/scripts/auto_requests.sh"
         hour: 0
         minute: 32
         user: psm
