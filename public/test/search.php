@@ -44,7 +44,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
 
         $us_avail = ($us_response->available == true) ? '✅' : '❌';
         $cn_avail = ($cn_response->available == true) ? '✅' : '❌';
-        echo "<td>$name</td><td>$us_avail</td><td>$cn_avail</td>\n";
+        $link = '/test/app.php?id=' . $id;
+        echo "<td><a href='$link'>$name</a></td><td>$us_avail</td><td>$cn_avail</td>\n";
 
         ?></tr><?php
     }
