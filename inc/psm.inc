@@ -116,6 +116,14 @@ function parse_html_response($html) {
         //     echo $l->text();
         // }
 
+        // look for an "Install" button
+        $free = null !== $qp->find('button[aria-label="Install"]')->get(0);
+        // look for a button with a lable that ends with Buy
+        // e.g. "$3.99 Buy"
+        $paid = null !== $qp->find('button[aria-label$="Buy"]')->get(0);
+
+        $response->available = $free || $paid;
+
         // App name
         $name_ele = $qp->find('h1[itemprop="name"]');
         $response->name = $name_ele->get(0)->textContent;
@@ -240,14 +248,8 @@ function test_app($app_id, $territory) {
         $response->not_found = true;
         $response->available = false;
     } else {
-        // a quick check without really parsing the HTML
-        $free = str_contains($result['html'], 'aria-label="Install"');
-
-        $paid = str_contains($result['html'], 'aria-label="$');
-        $available = $free || $paid;
-
         $response = parse_html_response($result['html']);
-        $response->available = $available;
+        // $response->available = $available;
     }
 
     save_request_response($request, $response, 'server');
