@@ -37,11 +37,12 @@ foreach($rows as $row) {
     // var_dump($row->request);
     // echo "\n";
     // var_dump($row->response);
+    $link = '/test/app.php?id=' . $row->request->id;
 ?>
         <tr>
             <td><?php echo $row->ts ?></td>
             <td><?php echo $row->request->id ?></td>
-            <td><?php echo $row->response->name ?></td>
+            <td><a href='<? php echo $link ?>'><?php echo $row->response->name ?></a></td>
             <td><?php echo $row->request->gl ?></td>
             <td><?php echo $row->response->available ? '✅' : '❌' ?></td>
         </tr>
