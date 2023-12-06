@@ -133,6 +133,7 @@ foreach($ids as $id => $territory_ids) {
         echo("testing $id in $territory_id:");
         $response = test_app($id, $territory_id);
         echo(($response->available ? '✅' : '❌') . "\n");
+        sleep(1);
     }
     $duration = time() - $start;
     print "Duration: $duration\n";
