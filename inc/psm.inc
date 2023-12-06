@@ -241,7 +241,10 @@ function test_app($app_id, $territory) {
         $response->available = false;
     } else {
         // a quick check without really parsing the HTML
-        $available = str_contains($result['html'], 'aria-label="Install"');
+        $free = str_contains($result['html'], 'aria-label="Install"');
+
+        $paid = str_contains($result['html'], 'aria-label="$');
+        $available = $free || $paid;
 
         $response = parse_html_response($result['html']);
         $response->available = $available;
