@@ -42,7 +42,7 @@ foreach($rows as $row) {
         <tr>
             <td><?php echo $row->ts ?></td>
             <td><?php echo $row->request->id ?></td>
-            <td><a href='<? php echo $link ?>'><?php echo $row->response->name ?></a></td>
+            <td><a href='<?php echo $link ?>'><?php echo $row->response->name ?></a></td>
             <td><?php echo $row->request->gl ?></td>
             <td><?php echo $row->response->available ? '✅' : '❌' ?></td>
         </tr>
