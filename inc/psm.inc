@@ -109,75 +109,80 @@ function parse_html_response($html) {
     // add, remove, or change fields
     $response->version = 1;
 
-    // links to other languages
-    // XXX find doesn't find anything
-    // foreach ($qp->find('link="alternate"]') as $l) {
-    //     echo $l->text();
-    // }
+    try {
+        // links to other languages
+        // XXX find doesn't find anything
+        // foreach ($qp->find('link="alternate"]') as $l) {
+        //     echo $l->text();
+        // }
 
-    // App name
-    $name_ele = $qp->find('h1[itemprop="name"]');
-    $response->name = $name_ele->get(0)->textContent;
+        // App name
+        $name_ele = $qp->find('h1[itemprop="name"]');
+        $response->name = $name_ele->get(0)->textContent;
 
-    // Developer name
-    $dev_ele = $name_ele->siblings('div')->find('span');
-    $response->developer = $dev_ele->get(0)->textContent;
+        // Developer name
+        $dev_ele = $name_ele->siblings('div')->find('span');
+        $response->developer = $dev_ele->get(0)->textContent;
 
-    // App icon
-    $app_icon_ele = $qp->find('img[alt="Icon image"]');
-    $response->icon = $app_icon_ele->get(0)->getAttribute('src');
+        // App icon
+        $app_icon_ele = $qp->find('img[alt="Icon image"]');
+        $response->icon = $app_icon_ele->get(0)->getAttribute('src');
 
-    // star rating
-    $star_ele = $qp->find('div[aria-label*="Rated "]');
-    // this value comes out as something like "4.2star", strip the "star"
-    // and convert to a float
-    $star_temp = $star_ele->get(0);
-    if ($star_temp) {
-        $response->star_rating = (float)str_replace('star', '', $star_temp->textContent);
-    }
+        // star rating
+        $star_ele = $qp->find('div[aria-label*="Rated "]');
+        // this value comes out as something like "4.2star", strip the "star"
+        // and convert to a float
+        $star_temp = $star_ele->get(0);
+        if ($star_temp) {
+            $response->star_rating = (float)str_replace('star', '', $star_temp->textContent);
+        }
 
-    // content rating
-    $rating_ele = $qp->find('span[itemprop="contentRating"]');
-    $response->content_rating = $rating_ele->get(0)->firstChild->textContent;
+        // content rating
+        $rating_ele = $qp->find('span[itemprop="contentRating"]');
+        $response->content_rating = $rating_ele->get(0)->firstChild->textContent;
 
-    // short description (from meta tag)
-    $short_desc_ele = $qp->find('meta[itemprop="description"]');
-    $response->short_description = $short_desc_ele->get(0)->getAttribute('content');
+        // short description (from meta tag)
+        $short_desc_ele = $qp->find('meta[itemprop="description"]');
+        $response->short_description = $short_desc_ele->get(0)->getAttribute('content');
 
-    // long description
-    $desc_ele = $qp->find('div[data-g-id="description"]');
-    $response->description = $desc_ele->get(0)->textContent;
+        // long description
+        $desc_ele = $qp->find('div[data-g-id="description"]');
+        $response->description = $desc_ele->get(0)->textContent;
 
-    // updated date and category
-    $sibs = $desc_ele->siblings('div');
-    $updated_date_ele = $sibs->get(0)->firstChild->childNodes[1];
-    $response->updated_date = strtotime($updated_date_ele->textContent);
+        // updated date and category
+        $sibs = $desc_ele->siblings('div');
+        $updated_date_ele = $sibs->get(0)->firstChild->childNodes[1];
+        $response->updated_date = strtotime($updated_date_ele->textContent);
 
-    $categories = [];
+        $categories = [];
 
-    foreach ($sibs->find('span') as $cat_ele) {
-        $category = $cat_ele->get(0)->textContent;
-        if (!str_contains($category, '#')) {
-            // this element can be e.g.
-            // "#3 in top free social" (Facebook, as I write this)
-            // we can skip those
-            array_push($categories, $category);
-            // the first category is the primary (? XXX)
-            if (!isset($response->category)) {
-                $response->category = $category;
+        foreach ($sibs->find('span') as $cat_ele) {
+            $category = $cat_ele->get(0)->textContent;
+            if (!str_contains($category, '#')) {
+                // this element can be e.g.
+                // "#3 in top free social" (Facebook, as I write this)
+                // we can skip those
+                array_push($categories, $category);
+                // the first category is the primary (? XXX)
+                if (!isset($response->category)) {
+                    $response->category = $category;
+                }
             }
         }
-    }
-    $response->categories = $categories;
+        $response->categories = $categories;
 
-    // screenshots
-    $screenshots = [];
-    foreach($qp->find('img[role="button"]')->get() as $i) {
-        $link = $i->getAttribute('src');
-        array_push($screenshots, $link);
-    }
+        // screenshots
+        $screenshots = [];
+        foreach($qp->find('img[role="button"]')->get() as $i) {
+            $link = $i->getAttribute('src');
+            array_push($screenshots, $link);
+        }
 
-    $response->screenshots = $screenshots;
+        $response->screenshots = $screenshots;
+    } catch (Exception $ex) {
+        error_log('parse error for ' . $request->id . ' in ' . $request->gl . ': '. $ex);
+        $response->parse_error = true;
+    }
 
     return $response;
 }
