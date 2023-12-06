@@ -23,7 +23,7 @@ global $mongodb_manager;
 
 $filter = [];
 $options = [
-    'limit' => 20,
+    'limit' => 40,
     'sort' => [
         'ts' => -1
     ]
