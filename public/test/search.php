@@ -96,8 +96,8 @@ if($_SERVER['REQUEST_METHOD'] == 'POST') {
     foreach($ids as $id) {
         ?><tr><?php
 
-        $first_response = test_app($id, 'us');
-        $second_response = test_app($id, 'cn');
+        $first_response = test_app($id, $test1);
+        $second_response = test_app($id, $test2);
 
         $name = $first_response->name;
 
