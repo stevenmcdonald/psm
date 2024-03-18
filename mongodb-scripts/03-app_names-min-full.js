@@ -10,7 +10,7 @@ recreate(db.main, [
             short_description: '$response.short_description',
             description: '$response.description',
             developer: '$response.developer',
-            rating: '$response.rating'
+            star_rating: '$response.star_rating'
         }
     }, {
         $group: {
@@ -33,7 +33,7 @@ recreate(db.main, [
             developer: {
                 $last: '$developer'
             },
-            rating: {
+            star_rating: {
                 $last: '$star_rating'
             },
             first_ts: {
