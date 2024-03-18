@@ -72,9 +72,11 @@ recreate(db.agg_statuses, [
             available: '$available',
             short_description: '$app.short_description',
             description: '$app.description',
-            deveoper: '$app.deveoper',
+            developer: '$app.developer',
             // ranking: '$app.ranking',
             territories: '$territories',
+            first_ts: '$app.first_ts',
+            star_rating: '$app.star_rating'
         }
     }
 ], {'unavailable_somewhere': 1}, 'apps');
