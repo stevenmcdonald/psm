@@ -18,8 +18,17 @@ recreate(db.app_names, [
             count: {
                 $sum: 1
             },
+            short_description : {
+                $last: '$short_description'
+            },
+            description: {
+                $last: '$description'
+            },
             developer: {
                 $last: '$developer'
+            },
+            star_rating: {
+                $last: '$star_rating'
             }
         }
     }, {
@@ -30,7 +39,10 @@ recreate(db.app_names, [
             last_ts: '$last_ts',
             icon: '$icon',
             count: '$count',
+            short_description: '$short_description',
+            description: '$description',
             developer: '$developer',
+            star_rating: '$star_rating'
         }
     }, {
         $sort: {
@@ -52,8 +64,20 @@ recreate(db.app_names, [
             icon: {
                 $first: '$icon'
             },
+            count: {
+                $first: '$count'
+            },
+            short_description: {
+                $first: '$short_description'
+            },
+            description: {
+                $first: '$description'
+            },
             developer: {
                 $first: '$developer'
+            },
+            star_rating: {
+                $first: '$star_rating'
             }
         }
     }
