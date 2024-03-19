@@ -49,8 +49,8 @@ function getChanges() {
                         $change->ts = $ts;
                         $change->confirmations = 1;
 
-                        $change->app = new stdClass;
-                        $change->app->id = $app['_id'];
+                        // $change->app = new stdClass;
+                        // $change->app->id = $app['_id'];
                         //$change->app->ranking = $app['ranking'];
                     }
                 }
