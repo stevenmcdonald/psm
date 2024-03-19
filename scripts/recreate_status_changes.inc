@@ -65,6 +65,24 @@ function getChanges() {
     return $changes;
 }
 
+function isAppAvailableSomewhereDuring($id, $ts_start, $ts_end) {
+    $apps = getAllStatusesGrouped();
+    foreach($apps[$id]['t'] as $statuses) {
+        foreach($statuses as $ts => $status) {
+            if($ts < $ts_start) {
+                continue;
+            }
+            if($ts > $ts_end) {
+                break;
+            }
+            if($status) {
+                return true;
+            }
+        }
+    }
+    return false;
+}
+
 function isChangeSignificant($change) {
 
     if(!isset($change->duration)) {
