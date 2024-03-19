@@ -10,7 +10,9 @@ recreate(db.main, [
             short_description: '$response.short_description',
             description: '$response.description',
             developer: '$response.developer',
-            star_rating: '$response.star_rating'
+            star_rating: '$response.star_rating',
+            category: '$response.category',
+            categories: '$response.categories'
         }
     }, {
         $group: {
@@ -35,6 +37,12 @@ recreate(db.main, [
             },
             star_rating: {
                 $last: '$star_rating'
+            },
+            category: {
+                $last: '$category'
+            },
+            categories: {
+                $last: '$categories'
             },
             first_ts: {
                 $min: '$ts'

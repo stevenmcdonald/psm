@@ -29,6 +29,12 @@ recreate(db.app_names, [
             },
             star_rating: {
                 $last: '$star_rating'
+            },
+            category: {
+                $last: '$category'
+            },
+            categories: {
+                $last: '$categories'
             }
         }
     }, {
@@ -42,7 +48,9 @@ recreate(db.app_names, [
             short_description: '$short_description',
             description: '$description',
             developer: '$developer',
-            star_rating: '$star_rating'
+            star_rating: '$star_rating',
+            category: '$category',
+            categories: '$categories'
         }
     }, {
         $sort: {
@@ -78,6 +86,12 @@ recreate(db.app_names, [
             },
             star_rating: {
                 $first: '$star_rating'
+            },
+            category: {
+                $last: '$category'
+            },
+            categories: {
+                $last: '$categories'
             }
         }
     }

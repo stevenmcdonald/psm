@@ -76,7 +76,9 @@ recreate(db.agg_statuses, [
             // ranking: '$app.ranking',
             territories: '$territories',
             first_ts: '$app.first_ts',
-            star_rating: '$app.star_rating'
+            star_rating: '$app.star_rating',
+            category: '$app.category',
+            categories: '$app.categories'
         }
     }
 ], {'unavailable_somewhere': 1}, 'apps');
