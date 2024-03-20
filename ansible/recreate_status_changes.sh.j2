@@ -2,5 +2,5 @@
 
 php recreate_status_changes.php
 
-# mongosh mongodb://psm@localhost/psm -p {{ MONGODB_PASSWORD }} --eval "db.status_changes_tmp.ensureIndex({ts: -1})"
-# mongosh mongodb://psm@localhost/psm -p {{ MONGODB_PASSWORD }} --eval "db.status_changes_tmp.renameCollection('status_changes', true)"
+mongosh mongodb://psm@localhost/psm -p {{ MONGODB_PASSWORD }} --eval "db.status_changes_tmp.ensureIndex({ts: -1})"
+mongosh mongodb://psm@localhost/psm -p {{ MONGODB_PASSWORD }} --eval "db.status_changes_tmp.renameCollection('status_changes', true)"
