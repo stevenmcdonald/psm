@@ -14,7 +14,16 @@ recreate(db.main, [
             category: '$response.category',
             categories: '$response.categories'
         }
-    }, {
+    },
+    // if the Play Store returned a 404, the data won't contain icon and name
+    // (and many other fields). We want to skip those for app_names, so we
+    // (try to) use the last good metadadata we have
+    {
+        $match: {
+            "icon": {$exists:true}
+        }
+    },
+    {
         $group: {
             _id: {
                 id: '$id',
