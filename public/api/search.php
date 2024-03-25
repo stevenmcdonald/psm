@@ -1,7 +1,6 @@
 <?php
 
 require '../../inc/psm.inc';
-require '../../inc/util.inc';
 
 // Search term
 if (!array_key_exists('q', $_GET)) {

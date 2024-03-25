@@ -1,7 +1,6 @@
 <?php
 
 require '../../inc/psm.inc';
-require '../../inc/util.inc';
 
 if($_SERVER['REQUEST_METHOD'] != 'POST') {
     client_error('Bad request');
