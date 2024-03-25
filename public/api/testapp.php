@@ -10,7 +10,6 @@ if($_SERVER['REQUEST_METHOD'] != 'POST') {
 // Search term
 if (!array_key_exists('id', $_POST)) {
     client_error('"id" parameter is required');
-    echo var_dump($_POST);
     return;
 }
 
