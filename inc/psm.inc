@@ -299,6 +299,12 @@ function save_request_response($request, $response, $source) {
         $app->unavailable_somewhere = 0;
         $app->icon = $response->icon;
         $app->territories = 1;
+        $app->short_description = $response->short_description;
+        $app->description = $response->description;
+        $app->star_rating = $response->star_rating;
+        $app->first_ts = $data->ts;
+        $app->last_ts = $data->ts;
+        $app->developer = $response->developer;
 
         $collection->insertOne($app);
     }
