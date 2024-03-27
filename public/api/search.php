@@ -2,6 +2,8 @@
 
 require '../../inc/psm.inc';
 
+header("Access-Control-Allow-Origin: *");
+
 // Search term
 if (!array_key_exists('q', $_GET)) {
     client_error('"q" parameter is required');
