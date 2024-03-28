@@ -3,6 +3,7 @@
 require '../../inc/psm.inc';
 
 header("Access-Control-Allow-Origin: *");
+header("Access-Control-Request-Method: POST");
 
 if($_SERVER['REQUEST_METHOD'] != 'POST') {
     client_error('Bad request');
