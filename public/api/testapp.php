@@ -2,8 +2,18 @@
 
 require '../../inc/psm.inc';
 
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Request-Method: POST");
+// Handle CORS preflight requests
+//
+// This is set to allow everyone for developement
+// some related info here:
+// https://stackoverflow.com/questions/8719276/cross-origin-request-headerscors-with-php-headers
+if ($_SERVER['REQUEST_METHOD'] == 'OPTIONS') {
+    header("Access-Control-Allow-Origin: *");
+    header("Access-Control-Request-Method: OPTIONS, POST");
+
+    return;
+}
+
 
 if($_SERVER['REQUEST_METHOD'] != 'POST') {
     client_error('Bad request');
