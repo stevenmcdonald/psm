@@ -4,6 +4,7 @@ require '../../inc/psm.inc';
 
 header("Access-Control-Allow-Origin: *");
 header("Access-Control-Request-Method: OPTIONS, POST");
+header("Access-Control-Allow-Headers: Authorization, Content-Type");
 
 // Handle CORS preflight requests
 //
