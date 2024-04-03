@@ -45,6 +45,7 @@ function getChanges() {
                         $change = new stdClass;
                         $change->id = $id;
                         $change->territory = $territory;
+                        $change->territoryName = territory_name($territory);
                         $change->change = $status ? 1 : -1;
                         $change->ts = $ts;
                         $change->confirmations = 1;
