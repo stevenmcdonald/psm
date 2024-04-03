@@ -315,13 +315,9 @@ function save_request_response($request, $response, $source) {
 function get_territories() {
     static $territories;
     if(!isset($territories)) {
-        $territories = [];
-        $lines = file(dirname(__DIR__) . '/inc/territories.tsv', FILE_IGNORE_NEW_LINES);
-        foreach ($lines as $l) {
-            list($name, $code, $languages) = explode("\t", $l);
-
-            $territories[$code] = $name;
-        }
+        $path = dirname(__DIR__) . '/public/territories.json';
+        $json = file_get_contents($path);
+        $territories = json_decode($json, true);
     }
     return $territories;
 }
