@@ -35,8 +35,8 @@ function play_store_proxy_request($request) {
     $url = PLAY_STORE_URL;
     $url .= '?' . http_build_query($request);
 
-    for ($i = 0; $i < 4; $i ++) {
-        $timeout = 30 * $i;
+    for ($i = 0; $i < 3; $i ++) {
+        $timeout = 15 + (30 * $i);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
         curl_setopt($ch, CURLOPT_PROXY, PROXY);
