@@ -145,7 +145,6 @@
       ansible.builtin.cron:
         name: auto_requests
         job: "cd {{ install_dir }}/scripts/; {{ install_dir }}/scripts/auto_requests.sh"
-        hour: 0
         minute: 32
         user: psm
 
