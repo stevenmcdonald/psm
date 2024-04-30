@@ -1,0 +1,53 @@
+
+
+---
+
+- name: Install tor as a proxy
+  hosts: php_servers
+  vars:
+    distro: bullseye
+  become: no
+  remote_user: root
+
+  tasks:
+    - name: Install apt-transport-https
+      ansible.builtin.apt:
+        update_cache: true
+        name: apt-transport-https
+
+    - name: Add Tor Project Debian repo
+      ansible.builtin.template:
+        src: tor.list.j2
+        dest: /etc/apt/sources.list.d/tor.list
+
+    - name: Add Tor Repo key
+      ansible.builtin.copy:
+        src: tor-archive-keyring.gpg
+        dest: /usr/share/keyrings/tor-archive-keyring.gpg
+
+    - name: install Tor
+      ansible.builtin.apt:
+        update_cache: true
+        name:
+          - tor
+          - deb.torproject.org-keyring
+
+    - name: Stop Tor
+      ansible.builtin.systemd:
+        name: tor
+        state: stopped
+
+    # the debian package reads
+    # /usr/share/tor/tor-service-defaults-torrc
+    # first for some reason, so we override that
+    - name: Install tor config
+      ansible.builtin.copy:
+        src: tor-service-defaults-torrc
+        dest: /usr/share/tor/tor-service-defaults-torrc
+
+    - name: Start Tor
+      ansible.builtin.systemd:
+        name: tor
+        enabled: true
+        state: started
+

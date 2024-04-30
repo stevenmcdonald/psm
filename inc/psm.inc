@@ -35,11 +35,11 @@ function play_store_proxy_request($request) {
     $url = PLAY_STORE_URL;
     $url .= '?' . http_build_query($request);
 
-    for ($i = 0; $i < 10; $i ++) {
-        $timeout = 8 + pow($i, 2);
+    for ($i = 0; $i < 3; $i ++) {
+        $timeout = 30 + (30 * $i);
         $ch = curl_init();
         curl_setopt($ch, CURLOPT_URL, $url);
-        // curl_setopt($ch, CURLOPT_PROXY, PROXY);
+        curl_setopt($ch, CURLOPT_PROXY, PROXY);
         curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 1);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
         curl_setopt($ch, CURLOPT_TIMEOUT, $timeout);
@@ -49,6 +49,14 @@ function play_store_proxy_request($request) {
         ]);
 
         $html = curl_exec($ch);
+        $curl_errno = curl_errno($ch);
+        $curl_error = curl_error($ch);
+
+        if ($curl_errno > 0) {
+            // probably a timeout
+            continue;
+        }
+
         $code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
@@ -62,7 +70,8 @@ function play_store_proxy_request($request) {
                 $result['not_found'] = true;
                 break;
             default:
-                $result['error_code'] = $code;
+                $result['error_code'] = $curl_errno;
+                $result['error_msg'] = $curl_error;
         }
 
         return $result;
