@@ -139,7 +139,7 @@ foreach($ids as $id => $territory_ids) {
     }
     $duration = time() - $start;
     print "Duration: $duration\n";
-    if($duration > 60 * 20) {
+    if($duration > 60 * 45) {
         print "Breaking\n";
         break;
     }
