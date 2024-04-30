@@ -133,7 +133,9 @@ foreach($ids as $id => $territory_ids) {
         echo("testing $id in $territory_id:");
         $response = test_app($id, $territory_id);
         echo(($response->available ? '✅' : '❌') . "\n");
-        sleep(1);
+        // we don't need to sleep with Tor as a proxy, it slows
+        // things down enough to not get rate limited
+        // sleep(1);
     }
     $duration = time() - $start;
     print "Duration: $duration\n";
