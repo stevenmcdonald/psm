@@ -1,0 +1,9 @@
+DataDirectory /var/lib/tor
+PidFile /run/tor/tor.pid
+RunAsDaemon 1
+User debian-tor
+
+SocksPort unix:/run/tor/socks WorldWritable
+SocksPort 9050
+
+Log notice syslog
