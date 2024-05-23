@@ -135,7 +135,7 @@ foreach($ids as $id => $territory_ids) {
         echo(($response->available ? '✅' : '❌') . "\n");
         // we don't need to sleep with Tor as a proxy, it slows
         // things down enough to not get rate limited
-        // sleep(1);
+        sleep(1);
     }
     $duration = time() - $start;
     print "Duration: $duration\n";
