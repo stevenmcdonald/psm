@@ -237,7 +237,7 @@ function search_play_store($term, $territory) {
 }
 
 // test if an App is available
-function test_app($app_id, $territory) {
+function test_app($app_id, $territory, $store_on_failure = true) {
     $request = [];
     $request['id'] = $app_id;
     $request['gl'] = $territory;
@@ -261,7 +261,11 @@ function test_app($app_id, $territory) {
         // $response->available = $available;
     }
 
-    save_request_response($request, $response, 'server');
+    // if the caller is testing a use search, we don't want
+    // to store that in the DB as a failure if we get a 404
+    if (isset($result['not_found']) && $store_on_failure) {
+        save_request_response($request, $response, 'server');
+    }
 
     return $response;
 }

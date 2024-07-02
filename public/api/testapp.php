@@ -42,7 +42,12 @@ if (!territory_is_valid($gl)) {
     return;
 }
 
-$response = test_app($id, $gl);
+$store_on_failure = true;
+if(array_key_exists('user_search', $_POST) && $_POST[user_search]) {
+    $store_on_failure = false;
+}
+
+$response = test_app($id, $gl, $store_on_failure);
 
 echo json_encode(
     array(
