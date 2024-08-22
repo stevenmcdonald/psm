@@ -23,6 +23,9 @@ recreate(db.agg_statuses, [
             },
             last_unavailable_ts: {
                 $max: '$last_unavailable_ts'
+            },
+            last_tested_territory: {
+                $last: '$territory'
             }
         }
     }, {
@@ -47,7 +50,8 @@ recreate(db.agg_statuses, [
                         0
                     ]
                 }
-            }
+            },
+            last_tested_territory: '$last_tested_territory'
         }
     }, {
         $lookup: {
@@ -79,7 +83,8 @@ recreate(db.agg_statuses, [
             last_ts: '$app.last_ts',
             star_rating: '$app.star_rating',
             category: '$app.category',
-            categories: '$app.categories'
+            categories: '$app.categories',
+            last_tested_territory: '$last_tested_territory'
         }
     }
 ], {'unavailable_somewhere': 1}, 'apps');
