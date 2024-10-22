@@ -134,11 +134,11 @@ function parse_html_response($html) {
         $response->available = $free || $paid;
 
         // App name
-        $name_ele = $qp->find('h1[itemprop="name"]');
+        $name_ele = $qp->find('h1');
         $response->name = $name_ele->get(0)->textContent;
 
         // Developer name
-        $dev_ele = $name_ele->siblings('div')->find('span');
+        $dev_ele = $name_ele->parent()->siblings('div')->find('span');
         $response->developer = $dev_ele->get(0)->textContent;
 
         // App icon
