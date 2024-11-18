@@ -1,6 +1,11 @@
 // main -> app_names
 recreate(db.main, [
     {
+        $sort: {
+            ts: 1
+        }
+    },
+    {
         $project: {
             territory: '$request.gl',
             id: '$request.id',
