@@ -267,6 +267,11 @@ function test_app($app_id, $territory, $store_on_failure = true) {
         save_request_response($request, $response, 'server');
     }
 
+    // do actually save it if it was found
+    if (!isset($result['not_found'])) {
+        save_request_response($request, $response, 'server');
+    }
+
     return $response;
 }
 
