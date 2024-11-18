@@ -1,6 +1,11 @@
 // app_names -> app_basics
 recreate(db.app_names, [
     {
+        $sort: {
+            last_ts: 1
+        }
+    },
+    {
         $group: {
             _id: {
                 id: '$_id.id',
