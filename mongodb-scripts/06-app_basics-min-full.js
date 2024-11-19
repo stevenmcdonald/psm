@@ -57,11 +57,6 @@ recreate(db.app_names, [
             category: '$category',
             categories: '$categories'
         }
-    {
-        $match: {
-            "name": {$exists:true}
-        }
-    },
     }, {
         $sort: {
             id: 1,
@@ -77,25 +72,25 @@ recreate(db.app_names, [
                 $max: '$last_ts'
             },
             name: {
-                $last: '$name'
+                $first: '$name'
             },
             icon: {
-                $last: '$icon'
+                $first: '$icon'
             },
             count: {
-                $last: '$count'
+                $first: '$count'
             },
             short_description: {
-                $last: '$short_description'
+                $first: '$short_description'
             },
             description: {
-                $last: '$description'
+                $first: '$description'
             },
             developer: {
-                $last: '$developer'
+                $first: '$developer'
             },
             star_rating: {
-                $last: '$star_rating'
+                $first: '$star_rating'
             },
             category: {
                 $last: '$category'
