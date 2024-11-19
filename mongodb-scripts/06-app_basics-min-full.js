@@ -57,6 +57,11 @@ recreate(db.app_names, [
             category: '$category',
             categories: '$categories'
         }
+    {
+        $match: {
+            "name": {$exists:true}
+        }
+    },
     }, {
         $sort: {
             id: 1,
