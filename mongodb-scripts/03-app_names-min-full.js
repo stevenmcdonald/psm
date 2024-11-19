@@ -3,7 +3,6 @@ recreate(db.main, [
     {
         $sort: {
             ts: 1
-            name: 1
         }
     },
     {
