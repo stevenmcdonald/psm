@@ -72,25 +72,25 @@ recreate(db.app_names, [
                 $max: '$last_ts'
             },
             name: {
-                $first: '$name'
+                $last: '$name'
             },
             icon: {
-                $first: '$icon'
+                $last: '$icon'
             },
             count: {
-                $first: '$count'
+                $last: '$count'
             },
             short_description: {
-                $first: '$short_description'
+                $last: '$short_description'
             },
             description: {
-                $first: '$description'
+                $last: '$description'
             },
             developer: {
-                $first: '$developer'
+                $last: '$developer'
             },
             star_rating: {
-                $first: '$star_rating'
+                $last: '$star_rating'
             },
             category: {
                 $last: '$category'
