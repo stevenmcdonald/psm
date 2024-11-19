@@ -63,10 +63,6 @@ recreate(db.app_names, [
             count: -1
         }
     }, {
-        $match: {
-            "name": {$exists:true}
-        }
-    }, {
         $group: {
             _id: '$id',
             first_ts: {
