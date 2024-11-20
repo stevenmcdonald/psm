@@ -1,11 +1,6 @@
 // main -> app_names
 recreate(db.main, [
     {
-        $sort: {
-            ts: 1
-        }
-    },
-    {
         $project: {
             territory: '$request.gl',
             id: '$request.id',
@@ -25,7 +20,7 @@ recreate(db.main, [
     // (try to) use the last good metadadata we have
     {
         $match: {
-            "icon": {$exists:true}
+            "name": {$exists:true}
         }
     },
     {
